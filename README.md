@@ -11,7 +11,8 @@ we use Exa and CrewAI to build a team of AI research agents who, given any topic
 
 To enhance usability, we built a user-friendly GUI using Streamlit, allowing users to input topics and personal messages, generate newsletters seamlessly, and download the final HTML output directly.
 
-<img width="660" alt="Screenshot 2024-12-17 at 2 44 04 PM" src="https://github.com/user-attachments/assets/6c155e3a-5f78-4003-8118-4c9d37369b13" />
+![image](https://github.com/user-attachments/assets/68121ef0-f41b-4745-ba9f-33bf896bfe69)
+
 
 
 # Step 1: Create the Crew
@@ -28,7 +29,9 @@ Consider that this command initializes a Poetry project, so if you want to add a
 
 # Step 2: Create the Tasks
 
-![Screenshot 2024-12-17 at 2 47 33 PM](https://github.com/user-attachments/assets/697a3cf3-3e33-47be-93ca-0401c52d850b)
+![7CE03ED0-3020-4C0B-8BC2-4F8D68CD2F46_1_105_c](https://github.com/user-attachments/assets/1ceb9d4b-60cb-44c6-8135-06d187b8020c)
+
+
 
 ## Input and Output
 Before we start building our crew, we need to define the tasks that our agents will need to complete. This is the backbone of your crew. Once you have the tasks that your agents will perform, you can start creating your agents. But in order to define your tasks, you need to know what your input and expected output are. In our case:
