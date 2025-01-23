@@ -1,0 +1,86 @@
+research_task:
+  description: >
+    Conduct thorough research about the latest news on {topic}. Be sure to look for reliable and recent sources. 
+
+    Rules:
+    - Include only articles directly related to {topic}.
+    - Exclude non-news material or general lists of articles.
+    - Summarize news concisely with relevant details.
+    - Provide 1-2 news articles maximum.
+    - Use concise search queries (e.g., "latest news on {topic}").
+    - When using the Search Tool, your search query should be concise (for example, "latest news on {topic}").
+
+    IMPORTANT INSTRUCTIONS ABOUT USING TOOLS: When using tools, DO NOT ESCAPE the underscore character "_", EVER. If you need to use a tool and pass in a parameter called 'search_query', you should write 'search_query', not 'search\_query'. THIS IS VERY IMPORTANT, else the tool will not work.
+    
+    **IMPORTANT**:
+    - Implement rate limiting: Introduce a delay of 1-2 seconds between API calls to avoid exceeding the rate limit.
+    - Handle errors gracefully: Retry failed requests up to 3 times before logging them.
+
+  expected_output: >
+    A markdown document with the most relevant news stories. Each news story should contain the following:
+    - Title of the news
+    - Summary of the news
+    - URL of the article where the news was found
+
+    Here is an example of the format of a news article that you could include in the document:
+    
+    <EXAMPLE>
+      Story 1:
+      - Title: **Daily briefing: AI now beats humans at basic reading and maths**
+      - **Summary:** AI systems can now nearly match and sometimes exceed human performance in basic tasks. The report discusses the need for new benchmarks to assess AI capabilities and highlights the ethical considerations for AI models.
+      - **URL:** [Nature Article](https://www.nature.com/articles/d41586-024-01125-1)
+    </EXAMPLE>
+
+edit_task:
+  description: >
+    Edit the news list:
+    - Rewrite titles for better engagement.
+    - Add a paragraph explaining why each news item is important.
+    - Reorder news based on relevance to {topic}.
+    - Validate URLs to ensure they lead to correct news articles.
+    - Remove off-topic articles.
+
+    IMPORTANT INSTRUCTIONS ABOUT USING TOOLS: When using tools, DO NOT ESCAPE the underscore character "_", EVER. If you need to use a tool and pass in a parameter called 'search_query', you should write 'search_query', not 'search\_query'. THIS IS VERY IMPORTANT, else the tool will not work.
+    
+    **NOTE**:
+    - Do not fetch new articles; only edit the given ones.
+    - Add logic to handle potential issues with rate limits during validation.
+
+  expected_output: >
+    A markdown document with all the news to be included in the newsletter of the week. The document should have a title related to the curated stories of the week and a list of news articles.
+    
+    Each one should contain:
+    - Title:
+    - Summary: 
+    - Why this is important:
+    - Source: [URL of the article]
+
+    Here is an example of a document that you are expected to produce:
+    <EXAMPLE>
+    Title of the day: AI is taking over the world
+
+      - **Title:** AI Surpasses Human Capabilities in Basic Reading and Maths
+        **Summary:** Recent advancements in AI technology have enabled systems to match and sometimes exceed human performance in fundamental tasks such as reading and arithmetic. This shift necessitates the creation of new benchmarks to appropriately evaluate AI capabilities.
+        **Why this is important:** This development is crucial as it not only showcases the rapid progress in AI but also prompts a reevaluation of how AI is integrated into educational and professional settings. It raises significant ethical questions about the future role of AI in society.
+        **Source:** "Title of the article" by ["Source"](https://www.nature.com/articles/d41586-024-01125-1)
+
+        [... more news articles ...]
+
+    </EXAMPLE>
+
+newsletter_task:
+  description: >
+    Fill the following HTML template with exactly the same information that is given to you. Also, include the following personal message at the beginning of the newsletter in the space provided: {personal_message}
+
+    (If there is no personal message, leave the space empty.)
+    
+    Follow these rules:
+    - Do not truncate the information or change the order of the elements. 
+    - Do not modify the content of the news articles.
+    - Do not add any additional information to the newsletter.
+    - Add ALL the news stories provided to the newsletter. Even if the template only shows one news story, you should include all the news stories provided as context using the format provided in the template.
+
+    {html_template}
+  expected_output: >
+    Return ONLY the contents of the HTML template, without any tripple quotes like '```', '```html' or any other text. 
+    This output will be saved as a HTML file and sent to the subscribers.
