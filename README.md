@@ -1,6 +1,6 @@
 # NewsletterGen: Your AI-Powered Newsletter Creation Suite 📰
 
-Think of NewsletterGen as your **personal AI-powered newsletter team**, ready to provide you with the tools and insights you need to create compelling newsletters. This project uses cutting-edge AI technologies to research topics, generate engaging content, and compile it into professional HTML newsletters. 📈💻
+Whether you’re a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
 
 # What We Will Build
 we use Exa and CrewAI to build a team of AI research agents who, given any topic, can perform the following tasks for us:
@@ -8,6 +8,8 @@ we use Exa and CrewAI to build a team of AI research agents who, given any topic
 - Research and summarize the latest news on the given topic.
 - Verify that the sources are correct and that the articles are relevant to the selected topic.
 - Compile the top stories into a newsletter using an HTML template.
+
+To enhance usability, we built a user-friendly GUI using Streamlit, allowing users to input topics and personal messages, generate newsletters seamlessly, and download the final HTML output directly.
 
 <img width="660" alt="Screenshot 2024-12-17 at 2 44 04 PM" src="https://github.com/user-attachments/assets/6c155e3a-5f78-4003-8118-4c9d37369b13" />
 
@@ -96,12 +98,35 @@ Once everything is set up, you can run the crew using the CrewAI CLI. Remember t
     $ poetry install
     $ poetry run <YOUR_CREW_NAME>
     
-# Demo 🎬
-1.Enter the page description here: This Instagram account represents a sustainable fashion brand focusing on eco-friendly materials and modern design. The brand targets young,                                            eco-conscious consumers who are passionate about both style and sustainability.
+# Building GUI using Streamlit
 
-2.Enter the topic of the week here:This week’s content will focus on showcasing our new eco-friendly winter collection, with a focus on sustainable fabrics and minimalist design.                                         The goal is to highlight the versatility and eco-conscious nature of the products
+The project features an interactive GUI built with Streamlit for seamless newsletter generation. It allows users to input a topic and a personal message, which are processed by a team of AI agents to create a professional HTML newsletter. The GUI provides a simple and user-friendly interface with options to download the generated newsletter directly.
 
-## Final Newsletter HTML
-    
-<img width="798" alt="Screenshot 2024-12-15 at 12 09 09 PM" src="https://github.com/user-attachments/assets/3de38f1f-8baf-4401-bb7a-0fcd1297aab1" />
+## Features
+### 1.User Input Panel
 
+<img width="337" alt="Screenshot 2025-01-23 at 9 39 36 PM" src="https://github.com/user-attachments/assets/9e284f75-737c-4008-97c3-3d0b3ab5a4b1" />
+
+• The sidebar allows users to input a topic and add a personal message, which will appear prominently in the generated newsletter
+
+### 2.Real-Time Updates
+
+<img width="416" alt="Screenshot 2025-01-23 at 9 40 37 PM" src="https://github.com/user-attachments/assets/7a7e11c2-6eaa-404b-919a-cc377d0546b2" />
+
+• The interface dynamically displays the generation progress.
+
+• Users are notified upon successful generation.
+
+### 3.Newsletter Generation
+
+<img width="1037" alt="Screenshot 2025-01-23 at 9 42 05 PM" src="https://github.com/user-attachments/assets/a2466007-2181-4f39-aa7d-d5964b81296c" />
+
+• Using a team of specialized AI agents, the app transforms user inputs into a polished, professional newsletter, ensuring high-quality results every time.
+
+• The output is a downloadable HTML file ready for use.
+
+### 4.Download Option
+
+<img width="683" alt="Screenshot 2025-01-23 at 9 41 15 PM" src="https://github.com/user-attachments/assets/655878c9-5190-47ed-8c5c-f8c82e483553" />
+
+• The generated newsletter can be downloaded as an HTML file directly from the app.
