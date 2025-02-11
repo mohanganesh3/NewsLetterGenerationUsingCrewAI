@@ -14,7 +14,7 @@ class SearchAndContents(BaseTool):
 
         exa = Exa(api_key=os.getenv("EXA_API_KEY"))
 
-        one_week_ago = datetime.now() - timedelta(days=7)
+        one_week_ago = datetime.now() - timedelta(days=1)
         date_cutoff = one_week_ago.strftime("%Y-%m-%d")
 
         search_results = exa.search_and_contents(
