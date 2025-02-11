@@ -21,7 +21,8 @@ class SearchAndContents(BaseTool):
             query=search_query,
             use_autoprompt=True,
             start_published_date=date_cutoff,
-            text={"include_html_tags": False, "max_characters": 1500},
+            max_results=2,
+            text={"include_html_tags": False, "max_characters": 1000},
         )
 
         return search_results
@@ -35,7 +36,7 @@ class FindSimilar(BaseTool):
 
     def _run(self, article_url: str) -> str:
 
-        one_week_ago = datetime.now() - timedelta(days=7)
+        one_week_ago = datetime.now() - timedelta(days=1)
         date_cutoff = one_week_ago.strftime("%Y-%m-%d")
 
         exa = Exa(api_key=os.getenv("EXA_API_KEY"))
@@ -55,6 +56,6 @@ class GetContents(BaseTool):
 
         exa = Exa(api_key=os.getenv("EXA_API_KEY"))
 
-        contents = exa.get_contents(article_ids)
+        contents = exa.get_contents(article_ids, text={"max_characters": 1000})
         return contents
       
