@@ -18,7 +18,7 @@ research_task:
     - Handle errors gracefully: Retry failed requests up to 3 times before logging them.
 
     - dont forgot to wait for some time when using api call i am using the base model it will get ratelimit per minuite if you use more tokens
-
+    - dont do search many times we have token limit for using llm like you and all so make very less length api calls dont go on searching content
   
 
   expected_output: >
