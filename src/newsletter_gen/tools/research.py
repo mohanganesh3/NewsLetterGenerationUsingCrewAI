@@ -22,7 +22,7 @@ class SearchAndContents(BaseTool):
             use_autoprompt=True,
             start_published_date=date_cutoff,
             
-            text={"include_html_tags": False, "max_characters": 1000},
+            text={"include_html_tags": False, "max_characters": 500},
         )
 
         return search_results
@@ -56,6 +56,6 @@ class GetContents(BaseTool):
 
         exa = Exa(api_key=os.getenv("EXA_API_KEY"))
 
-        contents = exa.get_contents(article_ids, text={"max_characters": 1000})
+        contents = exa.get_contents(article_ids, text={"max_characters": 500})
         return contents
       
