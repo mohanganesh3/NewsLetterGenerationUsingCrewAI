@@ -17,6 +17,10 @@ research_task:
     - Implement rate limiting: Introduce a delay of 1-2 seconds between API calls to avoid exceeding the rate limit.
     - Handle errors gracefully: Retry failed requests up to 3 times before logging them.
 
+    - dont forgot to wait for some time when using api call i am using the base model it will get ratelimit per minuite if you use more tokens
+
+  
+
   expected_output: >
     A markdown document with the most relevant news stories. Each news story should contain the following:
     - Title of the news
