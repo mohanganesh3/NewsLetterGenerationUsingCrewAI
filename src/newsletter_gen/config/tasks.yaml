@@ -7,6 +7,7 @@ research_task:
     - Exclude non-news material or general lists of articles.
     - Summarize news concisely with relevant details.
     - Provide 1-2 news articles maximum.
+    - characters in response must be less than 1000 beacause we have rate limit so discard if it is more than that
     - Use concise search queries (e.g., "latest news on {topic}").
     - When using the Search Tool, your search query should be concise (for example, "latest news on {topic}").
 
