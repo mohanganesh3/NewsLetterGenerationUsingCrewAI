@@ -1,82 +1,79 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Newsletter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin: 0;
-        }
-        p {
-            color: #666;
-            line-height: 1.5;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 20px;
-        }
-        .read-more {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        .read-more a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        .read-more a:hover {
-            text-decoration: underline;
-        }
-        .goodbye {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
+        /* Reset styles for email clients */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0; padding: 0; width: 100%; background-color: #f4f4f4; font-family: 'Roboto', Arial, sans-serif; }
+
+        /* Container styles */
+        .container { width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .header { background-color: #2c3e50; color: #ffffff; text-align: center; padding: 20px; }
+        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin: 0; }
+        .content { padding: 20px; }
+        .personal-message { font-size: 16px; line-height: 1.6; color: #333333; margin-bottom: 20px; }
+        .news-item { border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
+        .news-item:last-child { border-bottom: none; }
+        .news-item h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; color: #2c3e50; margin: 0 0 10px; }
+        .news-item p { font-size: 14px; line-height: 1.5; color: #555555; margin: 0 0 10px; }
+        .read-more { display: inline-block; padding: 8px 16px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 14px; transition: background-color 0.3s; }
+        .read-more:hover { background-color: #2980b9; }
+        .footer { background-color: #2c3e50; color: #ffffff; text-align: center; padding: 15px; font-size: 12px; }
+        .footer p { margin: 0; }
+
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .container { max-width: 100%; border-radius: 0; }
+            .header h1 { font-size: 20px; }
+            .news-item h2 { font-size: 16px; }
+            .personal-message, .news-item p { font-size: 13px; }
+            .read-more { font-size: 13px; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1><!-- TITLE OF THE DAY --></h1>
-        <p><!-- PERSONAL MESSAGE --></p>
-        <ul>
-            <li>
-                <h2><!-- TITLE OF THE STORY --></h2>
-                <p><!-- SUMMARY OF THE STORY --></p>
-                <p><!-- WHY THIS IS IMPORTANT --></p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.example.com"><!-- LINK 1 --></a>
-                        <li><a href="https://www.example2.com"><!-- LINK 2 --></a>
-                    </ul>
-                </div>
-            </li>
-
-            <!-- ADD ALL THE OTHER NEWS ITEMS HERE USING THE SAME FORMAT AS THE EXAPLE ABOVE -->
-        </ul>
-        <p class="goodbye">Goodbye and see you tomorrow!</p>
-    </div>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table class="container" role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <h1>Weekly Newsletter</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            <!-- Personal Message -->
+                            <div class="personal-message">
+                                {personal_message}
+                            </div>
+                            <!-- News Items (to be repeated for each story) -->
+                            <!-- Example structure for one news item; designer agent will replicate -->
+                            <div class="news-item">
+                                <h2>{news_title}</h2>
+                                <p>{news_summary}</p>
+                                <a href="{news_url}" class="read-more">Read More</a>
+                            </div>
+                            <!-- Additional news items will be inserted here by the designer agent -->
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <p>Goodbye and see you next week! &copy; 2025 Newsletter Gen</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
