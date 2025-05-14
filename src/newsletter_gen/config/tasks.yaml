@@ -1,39 +1,21 @@
 research_task:
   description: >
-    Conduct thorough research about the latest news on {topic}. Be sure to look for reliable and recent sources. 
-
-    Rules:
-    - Include only articles directly related to {topic}.
-    - Exclude non-news material or general lists of articles.
-    - Summarize news concisely with relevant details.
-    - Provide 1-2 news articles maximum.
-    - characters in response must be less than 1000 beacause we have rate limit so discard if it is more than that
-    - Use concise search queries (e.g., "latest news on {topic}").
-    - When using the Search Tool, your search query should be concise (for example, "latest news on {topic}").
+    Research the latest news on {topic} from reliable sources. Include only 1-2 relevant articles, summarize concisely (<500 characters), and provide URLs. Use concise search queries like "latest news on {topic}". Respect API rate limits with 1-2 second delays between calls. Handle errors with up to 3 retries.
 
     IMPORTANT INSTRUCTIONS ABOUT USING TOOLS: When using tools, DO NOT ESCAPE the underscore character "_", EVER. If you need to use a tool and pass in a parameter called 'search_query', you should write 'search_query', not 'search\_query'. THIS IS VERY IMPORTANT, else the tool will not work.
-    
-    **IMPORTANT**:
-    - Implement rate limiting: Introduce a delay of 1-2 seconds between API calls to avoid exceeding the rate limit.
-    - Handle errors gracefully: Retry failed requests up to 3 times before logging them.
-
-    - dont forgot to wait for some time when using api call i am using the base model it will get ratelimit per minuite if you use more tokens
-    - dont do search many times we have token limit for using llm like you and all so make very less length api calls dont go on searching content
   
-
   expected_output: >
-    A markdown document with the most relevant news stories. Each news story should contain the following:
-    - Title of the news
-    - Summary of the news
-    - URL of the article where the news was found
+    A markdown document with 1-2 news stories, each with:
+    - Title
+    - Summary (<500 characters)
+    - URL
 
-    Here is an example of the format of a news article that you could include in the document:
-    
+    Example:
     <EXAMPLE>
       Story 1:
       - Title: **Daily briefing: AI now beats humans at basic reading and maths**
-      - **Summary:** AI systems can now nearly match and sometimes exceed human performance in basic tasks. The report discusses the need for new benchmarks to assess AI capabilities and highlights the ethical considerations for AI models.
-      - **URL:** [Nature Article](https://www.nature.com/articles/d41586-024-01125-1)
+      - Summary: AI systems can now nearly match and sometimes exceed human performance in basic tasks. The report discusses the need for new benchmarks to assess AI capabilities and highlights ethical considerations.
+      - URL: [Nature Article](https://www.nature.com/articles/d41586-024-01125-1)
     </EXAMPLE>
 
 edit_task:
