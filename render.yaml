@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: newsletter-gen
+    env: python
+    buildCommand: "poetry install"
+    startCommand: "poetry run python src/gui/app.py"
+    autoDeploy: true
