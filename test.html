@@ -1,155 +1,92 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Weekly Newsletter</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-        .container {
-            width: 80%;
-            margin: auto;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
-        }
-        h1, h2 {
-            color: #333;
-        }
-        h1 {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        h2 {
-            margin: 0;
-        }
-        p {
-            color: #666;
-            line-height: 1.5;
-        }
-        ul {
-            list-style-type: none;
-            padding: 0;
-        }
-        li {
-            margin-bottom: 20px;
-        }
-        .read-more {
-            margin-top: 10px;
-            font-size: 14px;
-        }
-        .read-more a {
-            color: #0066cc;
-            text-decoration: none;
-        }
-        .read-more a:hover {
-            text-decoration: underline;
-        }
-        .goodbye {
-            text-align: center;
-            margin-top: 30px;
-            color: #666;
+        /* Reset styles for email clients */
+        body, table, td, a { -webkit-text-size-adjust: 100%; -ms-text-size-adjust: 100%; }
+        table, td { mso-table-lspace: 0pt; mso-table-rspace: 0pt; }
+        img { -ms-interpolation-mode: bicubic; border: 0; height: auto; line-height: 100%; outline: none; text-decoration: none; }
+        body { margin: 0; padding: 0; width: 100%; background-color: #f4f4f4; font-family: 'Roboto', Arial, sans-serif; }
+
+        /* Container styles */
+        .container { width: 100%; max-width: 600px; margin: 0 auto; background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .header { background-color: #2c3e50; color: #ffffff; text-align: center; padding: 20px; }
+        .header h1 { font-family: 'Montserrat', sans-serif; font-size: 24px; margin: 0; }
+        .content { padding: 20px; }
+        .personal-message { font-size: 16px; line-height: 1.6; color: #333333; margin-bottom: 20px; }
+        .news-item { border-bottom: 1px solid #e0e0e0; padding: 15px 0; }
+        .news-item:last-child { border-bottom: none; }
+        .news-item h2 { font-family: 'Montserrat', sans-serif; font-size: 18px; color: #2c3e50; margin: 0 0 10px; }
+        .news-item p { font-size: 14px; line-height: 1.5; color: #555555; margin: 0 0 10px; }
+        .read-more { display: inline-block; padding: 8px 16px; background-color: #3498db; color: #ffffff; text-decoration: none; border-radius: 4px; font-size: 14px; transition: background-color 0.3s; }
+        .read-more:hover { background-color: #2980b9; }
+        .footer { background-color: #2c3e50; color: #ffffff; text-align: center; padding: 15px; font-size: 12px; }
+        .footer p { margin: 0; }
+
+        /* Responsive design */
+        @media only screen and (max-width: 600px) {
+            .container { max-width: 100%; border-radius: 0; }
+            .header h1 { font-size: 20px; }
+            .news-item h2 { font-size: 16px; }
+            .personal-message, .news-item p { font-size: 13px; }
+            .read-more { font-size: 13px; padding: 6px 12px; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Weekly Stock Market Update: A Surge in Optimism and Strategic Shifts</h1>
-        <p>hello, here is the news for your week!</p>
-        <ul>
-            <li>
-                <h2>Dow Soars on Rate Cut Anticipation: A 100-Point Leap</h2>
-                <p>The stock market opened strong with the Dow Jones increasing by approximately 100 points. Key influences include investor optimism about potential Federal Reserve rate cuts and notable earnings reports expected from major companies like Disney, Uber, and Airbnb. Additionally, significant movements were seen in stocks like Micron Technology and Spirit Airlines.</p>
-                <p>This surge reflects growing investor confidence that could lead to increased market liquidity and potentially higher returns on equity investments. It also highlights the acute sensitivity of market movements to Federal Reserve policies.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://qz.com/dow-jumps-100-points-as-hopes-for-interest-rate-cuts-ri-1851458084">qz.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>Nasdaq Climbs as Tech and Semiconductor Stocks Rally</h2>
-                <p>The Nasdaq composite index experienced a rise, driven primarily by gains in semiconductor stocks, notably Micron Technology. The market's positive response also aligns with broader economic indicators and corporate earnings reports.</p>
-                <p>The performance of tech and semiconductor stocks often serves as a bellwether for the overall health of the tech industry and can influence broader market trends.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.kiplinger.com/investing/stocks/stock-market-today-nasdaq-pops-as-semiconductor-stocks-soar">kiplinger.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>S&P 500 Gains Momentum, Rising for Fourth Consecutive Day</h2>
-                <p>The S&P 500 continued its upward trend for the fourth consecutive day, although gains were tempered by a significant drop in Disney stock following disappointing earnings results. The market's direction remains influenced by ongoing Federal Reserve decisions and economic indicators.</p>
-                <p>Continuous gains in the S&P 500 suggest a strengthening market sentiment, potentially signaling a robust economic outlook and investor confidence.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://finance.yahoo.com/news/stock-market-today-sp-500-rises-for-4th-day-disney-sinks-9-after-earnings-200558354.html">finance.yahoo.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>Optimistic Trends in Global Markets and U.S. Futures</h2>
-                <p>Global markets and U.S. futures saw an uptick as traders anticipated potential Federal Reserve interest rate cuts. This optimism was reflected across various sectors, including technology and finance, influencing stock prices positively.</p>
-                <p>These trends indicate a global shift in market dynamics and investor expectations, which could lead to significant shifts in investment strategies and financial planning.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.zerohedge.com/markets/futures-global-markets-rise-rising-fed-cut-bets">zerohedge.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>Labor Market Insights: U.S. Adds 175,000 Jobs in April</h2>
-                <p>The U.S. labor market added 175,000 jobs in April, indicating a slowdown in hiring compared to previous months. This report has implications for Federal Reserve policy decisions and has been a point of focus for market analysts and investors.</p>
-                <p>The labor market performance is a critical indicator of economic health and can influence monetary policy decisions, which in turn affect stock market trends.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.theguardian.com/business/article/2024/may/03/us-april-jobs-report">theguardian.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>Cooling Labor Market Fuels Hopes for Rate Cuts, Boosting U.S. Stocks</h2>
-                <p>U.S. stocks rallied following a report indicating a cooling labor market, which has increased investor hopes for upcoming rate cuts by the Federal Reserve. This has led to significant investor optimism, affecting various market sectors.</p>
-                <p>This development could lead to lower borrowing costs and stimulate economic growth, providing a favorable environment for investments.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.ft.com/content/fad96dd0-7064-4a74-bffb-e74b9b28ac09">ft.com</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>U.S. Stock Markets Show Mixed Results, Minor Gains Noted in S&P/TSX</h2>
-                <p>U.S. stock markets showed mixed results with minor gains in the S&P/TSX composite index. Market analysts discussed the potential impacts of Federal Reserve policies and economic data on market movements.</p>
-                <p>Understanding these mixed signals is essential for investors looking to navigate the complexities of the stock market influenced by diverse economic indicators.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://globalnews.ca/news/10480849/sp-tsx-composite-may-7-2024/?utm_medium=Twitter&utm_source=%40globalnewsto">globalnews.ca</a>
-                    </ul>
-                </div>
-            </li>
-            <li>
-                <h2>Big Tech's Recovery: Insights from Jim Cramer</h2>
-                <p>CNBC's Jim Cramer expressed optimism that the recent market sell-offs might be over, highlighting rebounds in major tech stocks like Nvidia and Microsoft. This sentiment reflects broader market recovery hopes amidst fluctuating interest rate expectations.</p>
-                <p>Cramer's insights often influence market sentiment, and his positive outlook could bolster investor confidence in tech stocks.</p>
-                <div class="read-more">
-                    <p>Read more:</p>
-                    <ul>
-                        <li><a href="https://www.cnbc.com/2024/05/06/cramer-says-the-sell-off-may-be-over-pointing-to-big-tech-correction.html">cnbc.com</a>
-                    </ul>
-                </div>
-            </li>
-        </ul>
-        <p class="goodbye">Goodbye and see you tomorrow!</p>
-    </div>
+    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="center" style="padding: 20px 0;">
+                <table class="container" role="presentation" border="0" cellpadding="0" cellspacing="0">
+                    <!-- Header -->
+                    <tr>
+                        <td class="header">
+                            <h1>Weekly Newsletter</h1>
+                        </td>
+                    </tr>
+                    <!-- Content -->
+                    <tr>
+                        <td class="content">
+                            <!-- Personal Message -->
+                            <div class="personal-message">
+                                Hello,Everyone
+                            </div>
+                            <!-- News Items -->
+                            <div class="news-item">
+                                <h2>BGMI Releases New Redeem Codes for Weapon Upgrades Ahead of 3.8 Update</h2>
+                                <p>Krafton India has released new redeem codes for BGMI, allowing players to claim exclusive weapon upgrades, skins, and outfits. This update is a major step forward in the game's development, providing players with new ways to customize their gameplay experience.</p>
+                                <a href="https://timesofindia.indiatimes.com/technology/gaming/bgmi-releases-new-redeem-codes-for-weapon-upgrades-ahead-of-3-8-update-list-of-codes-how-to-redeem-and-more/articleshow/121152561.cms" class="read-more">Read More</a>
+                            </div>
+                            <div class="news-item">
+                                <h2>BGMI 3.8 Update: Krafton India Shares Details, Including New Steampunk Frontier Theme Mode</h2>
+                                <p>The 3.8 update is scheduled to release on May 15, and Krafton has shared details, including a new Steampunk Frontier theme mode and new features. This update promises to bring new excitement to the game, and we can't wait to see what it has in store.</p>
+                                <a href="https://in.ign.com/battlegrounds-mobile-india/230776/news/bgmi-38-update-krafton-india-shares-details-including-new-steampunk-frontier-theme-mode-new-features" class="read-more">Read More</a>
+                            </div>
+                            <div class="news-item">
+                                <h2>New Update, New Events, and more!</h2>
+                                <p>The latest update from Garena Delta Force brings new events and features to the game. With this update, players can expect new challenges and opportunities to improve their gameplay.</p>
+                                <a href="https://deltaforce.garena.com/en/news/all/NTQEBZ" class="read-more">Read More</a>
+                            </div>
+                            <div class="news-item">
+                                <h2>Level Infinite - Liquipedia PUBG Mobile Wiki</h2>
+                                <p>Level Infinite is a new game mode in PUBG Mobile, offering a unique gameplay experience. This article provides an in-depth look at the game mode, including its features and gameplay.</p>
+                                <a href="https://liquipedia.net/pubgmobile/Level_Infinite" class="read-more">Read More</a>
+                            </div>
+                        </td>
+                    </tr>
+                    <!-- Footer -->
+                    <tr>
+                        <td class="footer">
+                            <p>Goodbye and see you next week! &copy; 2025 Newsletter Gen</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>
