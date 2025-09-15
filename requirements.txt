@@ -1,5 +1,5 @@
-# Simplified requirements for Streamlit Cloud deployment
-# Core framework with minimal dependencies
+# Minimal requirements for Streamlit Cloud deployment
+# Using available versions that work with Python 3.13.6
 streamlit>=1.34.0
 langchain-google-genai>=1.0.3
 google-generativeai>=0.5.0
@@ -8,10 +8,10 @@ requests>=2.31.0
 pydantic>=2.0.0
 PyYAML>=6.0
 
-# CrewAI - using specific stable version  
-crewai==0.28.8
+# CrewAI - using latest available version for Python 3.13
+crewai==0.186.1
 
-# Research tools
+# Research tools  
 exa-py>=1.0.9
 
 # Essential utilities

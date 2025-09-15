@@ -1,0 +1,15 @@
+# Alternative minimal requirements for Streamlit Cloud
+# If the main requirements.txt fails, try this minimal version
+
+streamlit>=1.34.0
+langchain-google-genai>=1.0.3  
+google-generativeai>=0.5.0
+python-dotenv>=1.0.0
+requests>=2.31.0
+PyYAML>=6.0
+
+# Try older CrewAI version that definitely exists
+crewai==0.11.2
+
+# Basic research capability  
+exa-py>=1.0.9
