@@ -3,5 +3,5 @@ services:
     name: newsletter-gen
     env: python
     buildCommand: "poetry install"
-    startCommand: "poetry run python src/gui/app.py"
+    startCommand: "./start.sh"
     autoDeploy: true

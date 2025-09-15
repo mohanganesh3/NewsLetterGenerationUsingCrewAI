@@ -1,14 +1,51 @@
 import streamlit as st
-from newsletter_gen.crew import NewsletterGenCrew
+import sys
+import os
+
+# Add the src directory to Python path for imports
+sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
+
+try:
+    from newsletter_gen.crew_simple import NewsletterGenCrew
+except ImportError:
+    # Fallback for different path structures
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+    from src.newsletter_gen.crew_simple import NewsletterGenCrew
+    # Fallback for different path structures
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
+    from newsletter_gen.crew import NewsletterGenCrew
 
 
 class NewsletterGenUI:
 
     def load_html_template(self):
-        with open("src/newsletter_gen/config/newsletter_template.html", "r") as file:
-            html_template = file.read()
-
-        return html_template
+        # Handle different working directories in local vs cloud environments
+        template_paths = [
+            "src/newsletter_gen/config/newsletter_template.html",  # Local development
+            "newsletter_gen/config/newsletter_template.html",      # Streamlit Cloud from src/
+            "../newsletter_gen/config/newsletter_template.html",   # From gui directory
+            os.path.join(os.path.dirname(__file__), "..", "newsletter_gen", "config", "newsletter_template.html")  # Absolute path
+        ]
+        
+        for template_path in template_paths:
+            try:
+                with open(template_path, "r") as file:
+                    html_template = file.read()
+                return html_template
+            except FileNotFoundError:
+                continue
+        
+        # If no template found, return a basic template
+        return """
+        <!DOCTYPE html>
+        <html>
+        <head><title>Newsletter</title></head>
+        <body>
+        <h1>Newsletter</h1>
+        <div>{content}</div>
+        </body>
+        </html>
+        """
 
     def generate_newsletter(self, topic, personal_message):
         inputs = {
