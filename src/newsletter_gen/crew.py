@@ -75,32 +75,38 @@ class NewsletterGenCrew:
 
     @agent
     def researcher(self) -> Agent:
+        cfg = self.agents_config["researcher"]
         return Agent(
-            config=self.agents_config["researcher"],
+            role=cfg["role"],
+            goal=cfg["goal"],
+            backstory=cfg["backstory"],
             tools=[SearchAndContents(), FindSimilar(), GetContents()],
             verbose=True,
             llm=self.llm(),
-            step_callback=lambda step: self.step_callback(step, "Research Agent"),
         )
 
     @agent
     def editor(self) -> Agent:
+        cfg = self.agents_config["editor"]
         return Agent(
-            config=self.agents_config["editor"],
+            role=cfg["role"],
+            goal=cfg["goal"],
+            backstory=cfg["backstory"],
             verbose=True,
             tools=[SearchAndContents(), FindSimilar(), GetContents()],
             llm=self.llm(),
-            step_callback=lambda step: self.step_callback(step, "Chief Editor"),
         )
 
     @agent
     def designer(self) -> Agent:
+        cfg = self.agents_config["designer"]
         return Agent(
-            config=self.agents_config["designer"],
+            role=cfg["role"],
+            goal=cfg["goal"],
+            backstory=cfg["backstory"],
             verbose=True,
             allow_delegation=False,
             llm=self.llm(),
-            step_callback=lambda step: self.step_callback(step, "HTML Writer"),
         )
 
     @task
