@@ -1,15 +1,32 @@
+import os
+import streamlit as st
+from datetime import datetime
+from typing import Union, List, Tuple, Dict
+from langchain_core.agents import AgentFinish
+import json
+
+# Load environment variables
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass  # dotenv not available in production
+
+# For Streamlit Cloud deployment
+if hasattr(st, 'secrets'):
+    try:
+        for key, value in st.secrets["secrets"].items():
+            os.environ[key] = value
+    except:
+        pass  # Secrets not configured yet
+
+# Import CrewAI components
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from newsletter_gen.tools.research import SearchAndContents, FindSimilar, GetContents
 from langchain_anthropic import ChatAnthropic
 from langchain_groq import ChatGroq
-from datetime import datetime
-import streamlit as st
-from typing import Union, List, Tuple, Dict
-from langchain_core.agents import AgentFinish
-import json
 from langchain_google_genai import ChatGoogleGenerativeAI
-import os
 
 
 @CrewBase
@@ -21,13 +38,19 @@ class NewsletterGenCrew:
     tasks_config = "config/tasks.yaml"
 
     def llm(self):
-        #llm = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)
-        groq_api_key=os.getenv('GROQ_API_KEY')
-        os.environ["GOOGLE_API_KEY"]=os.getenv("GOOGLE_API_KEY")
-        llm=ChatGroq(groq_api_key=groq_api_key,
-             model_name="Llama3-8b-8192")
-        # llm = ChatGroq(model="mixtral-8x7b-32768")
-        # llm = ChatGoogleGenerativeAI(google_api_key=os.getenv("GOOGLE_API_KEY"))
+        # Use Google Gemini instead of deprecated Groq model
+        os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            google_api_key=os.getenv("GOOGLE_API_KEY"),
+            temperature=0.1,
+            max_tokens=4096
+        )
+        
+        # Alternative models (commented out):
+        # llm = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)
+        # groq_api_key=os.getenv('GROQ_API_KEY')
+        # llm=ChatGroq(groq_api_key=groq_api_key, model_name="llama3-70b-8192")  # Updated to working model
 
         return llm
 
