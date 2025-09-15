@@ -11,14 +11,6 @@ import os
 # Add src to Python path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
-# Ensure ChromaDB works on environments with older system sqlite3
-try:
-    import pysqlite3 as _pysqlite3  # type: ignore
-    import sys as _sys
-    _sys.modules["sqlite3"] = _sys.modules.pop("pysqlite3")
-except Exception:
-    pass
-
 try:
     # Try to import the full app
     from gui.app import NewsletterGenUI

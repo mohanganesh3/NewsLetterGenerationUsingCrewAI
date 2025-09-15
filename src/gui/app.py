@@ -12,16 +12,6 @@ if st.secrets.get("GOOGLE_API_KEY"):
 if st.secrets.get("EXA_API_KEY"):
     os.environ["EXA_API_KEY"] = st.secrets["EXA_API_KEY"]
 
-# Ensure ChromaDB works on environments with older system sqlite3
-# If pysqlite3 is present, alias it to sqlite3 before importing CrewAI/Chroma
-try:
-    import pysqlite3 as _pysqlite3  # type: ignore
-    import sys as _sys
-    _sys.modules["sqlite3"] = _sys.modules.pop("pysqlite3")
-except Exception:
-    # Safe to ignore; Chroma will raise a helpful error if sqlite is too old
-    pass
-
 from newsletter_gen.crew import NewsletterGenCrew
 
 
