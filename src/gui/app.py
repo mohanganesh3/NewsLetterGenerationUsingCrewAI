@@ -6,8 +6,11 @@ import os
 sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
 try:
-    from newsletter_gen.crew import NewsletterGenCrew
+    from newsletter_gen.crew_simple import NewsletterGenCrew
 except ImportError:
+    # Fallback for different path structures
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
+    from src.newsletter_gen.crew_simple import NewsletterGenCrew
     # Fallback for different path structures
     sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', 'src'))
     from newsletter_gen.crew import NewsletterGenCrew

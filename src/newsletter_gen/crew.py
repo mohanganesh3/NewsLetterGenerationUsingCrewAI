@@ -22,7 +22,7 @@ if hasattr(st, 'secrets'):
 
 # Import CrewAI components
 from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
+# from crewai.project import CrewBase, agent, crew, task  # Not available in older versions
 from newsletter_gen.tools.research import SearchAndContents, FindSimilar, GetContents
 from langchain_anthropic import ChatAnthropic
 from langchain_groq import ChatGroq

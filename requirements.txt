@@ -8,8 +8,8 @@ requests>=2.31.0
 pydantic>=2.0.0
 PyYAML>=6.0
 
-# CrewAI - using latest available version for Python 3.13
-crewai==0.186.1
+# CrewAI - trying older version without chromadb dependency
+crewai==0.70.1
 
 # Research tools  
 exa-py>=1.0.9
