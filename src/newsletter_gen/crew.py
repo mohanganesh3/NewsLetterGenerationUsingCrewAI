@@ -1,5 +1,6 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
+from newsletter_gen.tools.research import get_tools
 from datetime import datetime
 import streamlit as st
 from typing import Union, List, Tuple, Dict
@@ -79,6 +80,7 @@ class NewsletterGenCrew:
             role=cfg["role"],
             goal=cfg["goal"],
             backstory=cfg["backstory"],
+            tools=get_tools(),
             verbose=True,
             llm=self.llm(),
         )
@@ -91,6 +93,7 @@ class NewsletterGenCrew:
             goal=cfg["goal"],
             backstory=cfg["backstory"],
             verbose=True,
+            tools=get_tools(),
             llm=self.llm(),
         )
 
