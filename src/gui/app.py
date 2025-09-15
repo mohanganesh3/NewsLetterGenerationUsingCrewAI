@@ -41,7 +41,6 @@ class NewsletterGenUI:
             recent = fetch_recent_news(topic)
         except Exception as e:
             recent = []  # Fallback to empty if Exa fails; the researcher will rely on general knowledge
-        
         inputs = {
             "topic": topic,
             "personal_message": personal_message,
@@ -49,22 +48,7 @@ class NewsletterGenUI:
             # Provide pre-fetched results to the crew; referenced in tasks.yaml
             "pre_fetched_news": json.dumps(recent, default=str),
         }
-        
-        try:
-            return NewsletterGenCrew().crew().kickoff(inputs=inputs)
-        except ValueError as e:
-            # Handle API key validation errors
-            if "GOOGLE_API_KEY" in str(e):
-                st.error("❌ **API Key Error**")
-                st.error(str(e))
-                st.info("Please ensure your GOOGLE_API_KEY is properly configured in Streamlit secrets.")
-                return None
-            else:
-                raise
-        except Exception as e:
-            # Handle other errors
-            st.error(f"❌ **Newsletter Generation Error**: {str(e)}")
-            return None
+        return NewsletterGenCrew().crew().kickoff(inputs=inputs)
 
     def newsletter_generation(self):
 
@@ -72,8 +56,6 @@ class NewsletterGenUI:
             st.session_state.newsletter = self.generate_newsletter(
                 st.session_state.topic, st.session_state.personal_message
             )
-            # Always reset the generating flag, regardless of success or failure
-            st.session_state.generating = False
 
         if st.session_state.newsletter and st.session_state.newsletter != "":
             with st.container():
@@ -84,6 +66,7 @@ class NewsletterGenUI:
                     file_name="newsletter.html",
                     mime="text/html",
                 )
+            st.session_state.generating = False
 
     def sidebar(self):
         with st.sidebar:
