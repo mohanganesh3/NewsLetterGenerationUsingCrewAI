@@ -4,7 +4,7 @@
 
 Whether you’re a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
 
-**Try the live website here:** <a href="https://newslettergenerationusingcrewai-ocw9fz38zcsqr976xqg9h3.streamlit.app/">Visit NewsletterGen</a>
+**Try the live website here:** <a href="https://newslettergenerationusingcrewai.onrender.com">Visit NewsletterGen</a>
 
 # What We Will Build
 we use Exa and CrewAI to build a team of AI research agents who, given any topic, can perform the following tasks for us:
