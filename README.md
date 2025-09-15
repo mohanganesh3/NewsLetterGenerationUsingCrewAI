@@ -1,3 +1,5 @@
+<h1 align="center">🚀 Live Demo: <a href="https://newslettergenerationusingcrewai-ocw9fz38zcsqr976xqg9h3.streamlit.app/">Open the Streamlit App</a></h1>
+
 # NewsletterGen: Your AI-Powered Newsletter Creation Suite 📰
 
 Whether you’re a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
