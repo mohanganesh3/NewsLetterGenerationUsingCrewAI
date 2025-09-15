@@ -79,7 +79,6 @@ class NewsletterGenCrew:
             role=cfg["role"],
             goal=cfg["goal"],
             backstory=cfg["backstory"],
-            tools=get_tools(),
             verbose=True,
             llm=self.llm(),
         )
@@ -91,7 +90,6 @@ class NewsletterGenCrew:
             role=cfg["role"],
             goal=cfg["goal"],
             backstory=cfg["backstory"],
-            tools=get_tools(),
             verbose=True,
             llm=self.llm(),
         )
