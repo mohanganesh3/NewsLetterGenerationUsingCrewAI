@@ -2,329 +2,138 @@
 
 # NewsletterGen: Your AI-Powered Newsletter Creation Suite 📰
 
-An end-to-end tutorial to build a production-ready, AI newsletter generator that:
-- researches the latest news for any topic,
-- curates and edits the findings,
-- compiles a polished, email-friendly HTML newsletter — automatically.
+Whether you’re a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
 
-This guide explains the architecture, the CrewAI multi-agent orchestration, how the Exa-powered research tools work, and how the Streamlit UI ties everything together. By the end, you’ll be able to modify agents, prompts, tools, and the UI to ship your own bespoke newsletter engine.
+**Try the live website here:** <a href="https://newslettergenerationusingcrewai.onrender.com">Visit NewsletterGen</a>
 
----
+# What We Will Build
+we use Exa and CrewAI to build a team of AI research agents who, given any topic, can perform the following tasks for us:
 
-## Table of Contents
-- Motivation and Demo
-- How It Works (Big Picture)
-- Architecture Overview
-- Deep Dive: Key Components with Code
-  - Tools: Exa research with resilient retries
-  - Crew Orchestration: Agents, Tasks, LLM, and logging
-  - Prompts and Specs: agents.yaml and tasks.yaml
-  - HTML Template: Email-safe design
-  - Streamlit UI: Running the crew interactively
-- Run Locally
-- Customize and Extend
-- Deploy to Streamlit Cloud
-- Troubleshooting
+- Research and summarize the latest news on the given topic.
+- Verify that the sources are correct and that the articles are relevant to the selected topic.
+- Compile the top stories into a newsletter using an HTML template.
 
----
-
-## Motivation and Demo
-If you routinely create weekly or themed newsletters, the tedious parts are always the same: find recent, trustworthy sources; summarize concisely; organize content; and format for email. NewsletterGen automates that workflow.
-
-Live Demo (Streamlit): https://newslettergenerationusingcrewai-ocw9fz38zcsqr976xqg9h3.streamlit.app/
-
----
-
-## How It Works (Big Picture)
-On each run:
-1) You provide a topic (and optional personal message)
-2) Researcher fetches 1–2 high-signal items using Exa and summarizes them
-3) Editor validates links, improves copy, orders items for impact
-4) Designer fills a responsive HTML template and returns the final newsletter
-5) Each step writes a timestamped artifact to logs/
-
----
-
-## Architecture Overview
-- Orchestrator (CrewAI): Sequential Process with 3 agents
-  - Researcher → Editor → Designer
-- LLM: Gemini 2.0 Flash-Lite (cost-effective, fast)
-- Tools: Exa client with retry/backoff and 1s pacing
-- Config: YAML-powered roles, goals, and task prompts
-- UI: Streamlit app + command-line entry point
-
-Key paths:
-- src/newsletter_gen/crew.py — Crew, Agents, Tasks, LLM config, logging
-- src/newsletter_gen/tools/research.py — Exa-powered tools with retries
-- src/newsletter_gen/config/agents.yaml — Agent roles/goals/backstories
-- src/newsletter_gen/config/tasks.yaml — Task prompts + expected outputs
-- src/newsletter_gen/config/newsletter_template.html — Email template
-- src/gui/app.py and streamlit_app.py — Streamlit UI
-- src/newsletter_gen/main.py — CLI runner
-
----
-
-## Deep Dive: Key Components with Code
-
-### 1) Tools: Exa research with resilient retries
-The Researcher and Editor can call three tools. Each tool uses tenacity for retry, respects Exa rate limits (with 1s sleep), and constrains returned text length.
-
-```python
-# src/newsletter_gen/tools/research.py
-from langchain_core.tools import BaseTool
-from exa_py import Exa
-import os
-from datetime import datetime, timedelta
-import time
-from tenacity import retry, stop_after_attempt, wait_exponential
-
-class SearchAndContents(BaseTool):
-    name: str = "Search and Contents Tool"
-    description: str = (
-        "Searches the web for recent news (last week) using Exa API and returns content summaries."
-    )
-
-    @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-    def _run(self, search_query: str) -> str:
-        exa = Exa(api_key=os.getenv("EXA_API_KEY"))
-        one_week_ago = datetime.now() - timedelta(days=7)
-        date_cutoff = one_week_ago.strftime("%Y-%m-%d")
-        try:
-            results = exa.search_and_contents(
-                query=search_query,
-                use_autoprompt=True,
-                start_published_date=date_cutoff,
-                text={"include_html_tags": False, "max_characters": 300},
-                num_results=2,
-            )
-            time.sleep(1)  # pacing
-            return results
-        except Exception as e:
-            if "413" in str(e) or "429" in str(e):
-                raise  # allow tenacity to retry
-            raise Exception(f"Exa API error: {e}")
-```
-
-Why this matters:
-- The 7-day cutoff keeps content fresh
-- Tenacity handles bursty failures; a single 429 won’t kill the run
-- Constraining characters forces the model to focus on signal
-
-Similar classes FindSimilar and GetContents follow the same pattern.
-
----
-
-### 2) Crew Orchestration: Agents, Tasks, LLM, and logging
-The Crew is defined with three agents and three tasks. LLM is Gemini by default; every task writes a timestamped artifact to logs/.
-
-```python
-# src/newsletter_gen/crew.py (excerpt)
-from crewai import Agent, Crew, Process, Task
-from crewai.project import CrewBase, agent, crew, task
-from newsletter_gen.tools.research import SearchAndContents, FindSimilar, GetContents
-from datetime import datetime
-import streamlit as st
-from typing import Union, List, Tuple, Dict
-from langchain_core.agents import AgentFinish
-import json
-from langchain_google_genai import ChatGoogleGenerativeAI
-import os
-
-@CrewBase
-class NewsletterGenCrew:
-    agents_config = "config/agents.yaml"
-    tasks_config = "config/tasks.yaml"
-
-    def llm(self):
-        llm = ChatGoogleGenerativeAI(
-            model="gemini-2.0-flash-lite",
-            google_api_key=os.getenv("GOOGLE_API_KEY"),
-            temperature=0.7,
-        )
-        return llm
-
-    def step_callback(self, agent_output: Union[str, List[Tuple[Dict, str]], AgentFinish], agent_name, *args):
-        # Streams each tool call / finish into the Streamlit chat panel
-        with st.chat_message("AI"):
-            if isinstance(agent_output, str):
-                try:
-                    agent_output = json.loads(agent_output)
-                except json.JSONDecodeError:
-                    pass
-            if isinstance(agent_output, List) and all(isinstance(item, tuple) for item in agent_output):
-                for action, description in agent_output:
-                    st.write(f"Agent Name: {agent_name}")
-                    st.write(f"Tool used: {getattr(action, 'tool', 'Unknown')}")
-                    st.write(f"Tool input: {getattr(action, 'tool_input', 'Unknown')}")
-                    with st.expander("Show observation"):
-                        st.markdown(f"Observation\n\n{description}")
-            elif isinstance(agent_output, AgentFinish):
-                st.write(f"Agent Name: {agent_name}")
-                output = agent_output.return_values
-                st.write(f"I finished my task:\n{output['output']}")
-
-    @agent
-    def researcher(self) -> Agent:
-        return Agent(
-            config=self.agents_config["researcher"],
-            tools=[SearchAndContents(), FindSimilar(), GetContents()],
-            verbose=True,
-            llm=self.llm(),
-            step_callback=lambda step: self.step_callback(step, "Research Agent"),
-        )
-
-    # editor() and designer() are analogous; designer does not use tools
-
-    @task
-    def research_task(self) -> Task:
-        return Task(
-            config=self.tasks_config["research_task"],
-            agent=self.researcher(),
-            output_file=f"logs/{datetime.now().strftime('%Y-%m-%d_%H-%M-%S')}_research_task.md",
-        )
-```
-
-Why this matters:
-- @CrewBase wires YAML config to Python seamlessly
-- step_callback streams intermediate steps into Streamlit so users see progress
-- output_file leaves a durable breadcrumb trail for debugging and audits
-
----
-
-### 3) Prompts and Specs: YAML-driven agents and tasks
-You get reproducible behavior and easy edits by keeping roles/goals and prompts in YAML.
-
-```yaml
-# src/newsletter_gen/config/agents.yaml (excerpt)
-researcher:
-  role: Senior Researcher
-  goal: Conduct in-depth research to uncover reliable and cutting-edge news about {topic}.
-  backstory: >
-    You are an experienced journalist with exceptional research skills.
-    You always include accurate and complete URLs for every source.
-```
-
-```yaml
-# src/newsletter_gen/config/tasks.yaml (excerpt)
-research_task:
-  description: >
-    Research the latest news on {topic}. Include only 1–2 relevant articles, summarize concisely (<500 chars), and provide URLs.
-
-    IMPORTANT: When using tools, DO NOT ESCAPE the underscore character "_".
-  expected_output: >
-    Markdown with 1–2 stories: Title, Summary (<500 chars), URL
-```
-
-Designer’s newsletter_task appends your personal message and enforces “return only HTML” so the output is paste-ready for email.
-
----
-
-### 4) HTML Template: Email-safe design
-Responsive, conservative CSS keeps your newsletter legible in common clients.
-
-```html
-<!-- src/newsletter_gen/config/newsletter_template.html (excerpt) -->
-<div class="personal-message">
-  {personal_message}
-</div>
-<div class="news-item">
-  <h2>{news_title}</h2>
-  <p>{news_summary}</p>
-  <a href="{news_url}" class="read-more">Read More</a>
-</div>
-```
-
----
-
-### 5) Streamlit UI: Running the crew interactively
-The UI wires text inputs to CrewAI, shows streaming steps, and returns downloadable HTML.
-
-```python
-# src/gui/app.py (excerpt)
-from newsletter_gen.crew import NewsletterGenCrew
-
-class NewsletterGenUI:
-    def load_html_template(self):
-        with open("src/newsletter_gen/config/newsletter_template.html", "r") as f:
-            return f.read()
-
-    def generate_newsletter(self, topic, personal_message):
-        inputs = {
-            "topic": topic,
-            "personal_message": personal_message,
-            "html_template": self.load_html_template(),
-        }
-        return NewsletterGenCrew().crew().kickoff(inputs=inputs)
-```
-
----
-
-## Run Locally
-
-1) Install
-```bash
-# Poetry
-poetry install
-# or pip
-pip install -r requirements.txt
-```
-
-2) Set env
-```bash
-export GOOGLE_API_KEY="<your-gemini-api-key>"
-export EXA_API_KEY="<your-exa-api-key>"
-```
-
-3) Launch
-```bash
-# CLI
-python src/newsletter_gen/main.py
-
-# Streamlit
-streamlit run streamlit_app.py
-# or
-streamlit run src/gui/app.py
-```
-
----
-
-## Customize and Extend
-- Add tools: Create new BaseTool classes under src/newsletter_gen/tools and bind them to agents in crew.py
-- Change LLM: Swap Gemini for another provider by initializing a different LangChain chat model in llm()
-- Change the template: Edit src/newsletter_gen/config/newsletter_template.html to match your brand
-- Add agents/tasks: Update YAML files and declare corresponding @agent/@task in crew.py
-
----
-
-## Deploy to Streamlit Cloud
-- Add GOOGLE_API_KEY and EXA_API_KEY to Streamlit Secrets
-- The app includes a small sqlite compatibility shim to support Chroma on Debian-based images
-- Main module: streamlit_app.py (or src/gui/app.py)
-
----
-
-## Troubleshooting
-- API keys missing: Set both environment variables (or Streamlit secrets)
-- Exa rate limiting: Retries and backoff are built-in, but bursty queries can still hit limits
-- Optional LLM imports: We default to Gemini; to use Anthropic/Groq, install their SDKs and update llm()
-- Debug outputs: Inspect logs/ for timestamped artifacts from each task
-
----
-
-## UI Screenshots
+To enhance usability, we built a user-friendly GUI using Streamlit, allowing users to input topics and personal messages, generate newsletters seamlessly, and download the final HTML output directly.
 
 ![image](https://github.com/user-attachments/assets/68121ef0-f41b-4745-ba9f-33bf896bfe69)
 
+
+
+# Step 1: Create the Crew
+The first thing to do is to create the crew that will perform the tasks for us. We can build it ourselves using the core components of CrewAI (agents, tools, and tasks) or we can use the CrewAI CLI to create the crew for us. Let’s use the CLI to create the crew:
+
+    $ pip install crewai
+    $ crewai new newsletter-crew
+    
+This will create a new folder called **newsletter-crew**. You will find here all the components that you will need to create and orchestrate your agents. In it, you can also find the **src/config** folder, which contains the configuration files for your crew: **agents.yaml** and **tasks.yaml**. These will be automatically loaded to the CrewAI system if you are using the CLI.
+
+Consider that this command initializes a Poetry project, so if you want to add any dependencies, you should do it using Poetry:
+
+    $ poetry add my-dependency
+
+# Step 2: Create the Tasks
+
 ![7CE03ED0-3020-4C0B-8BC2-4F8D68CD2F46_1_105_c](https://github.com/user-attachments/assets/1ceb9d4b-60cb-44c6-8135-06d187b8020c)
 
-### 1. User Input Panel
+
+
+## Input and Output
+Before we start building our crew, we need to define the tasks that our agents will need to complete. This is the backbone of your crew. Once you have the tasks that your agents will perform, you can start creating your agents. But in order to define your tasks, you need to know what your input and expected output are. In our case:
+
+- **Input**: the topic of the newsletter
+- **Output**: the HTML code of the newsletter.
+Once you have that, you can start listing the tasks that your agents will need to complete to get from input to expected output. Think of it as a to-do list for your agents.
+
+## How to Define Tasks
+This is usually where things can get tricky. But don’t worry! With some practice, you will be able to create a set of tasks for any automation within a few minutes!
+
+My advice is to make a list of the to-do items that you would need to complete the task yourself. Then, break down these items into specific and granular tasks that your agents can perform.
+
+Here are some tips for creating your crew:
+
+- **Avoid tasks that are too complex**: If you try to perform too many actions in a single task, it can confuse the agent. For example, asking it to research a topic, summarize it, expand it, and reorder the results might be too much. Instead, break down the task into smaller, simpler tasks.
+- **Perform thorough testing until you get reliable results**: You will need to run your crew several times, varying your input to make sure that your agents are working correctly.
+- **Have a monitoring setup**: We will not cover monitoring and observability in this tutorial, but consider that you should be able to trace what your agents are thinking and doing. This is crucial for improving your prompts.
+  
+## For this Project, our tasks will be:
+
+1. Research task. To complete this task, the agent will need to:
+
+    - Search for the latest news on the given topic.
+    - Select the most relevant articles.
+    - Summarize the articles.
+2. Edit task. To complete this task, the agent will need to verify that the sources are correct and that the articles are relevant to the selected topic. The agent in charge of this task will also need to improve the summary, add a title, and a comment to the article.
+
+3. HTML task. To complete this task, the agent will need to replace the selected stories in an HTML template to generate the final newsletter file.
+
+   As I mentioned above, this is a trial and error process. I started off with 4 tasks (I had an extra summary task), but I found that the researcher can do the summary as well without any issues. So I removed the summary task, and now I have 3 tasks. :)
+
+## Fill the tasks.yaml File
+Now that we have our tasks, we can fill the tasks.yaml file with the tasks that our agents will need to complete. Think of it as writing the prompt for your agents. A task in CrewAI contains the following properties:
+
+- **Description**: A detailed prompt outlining what the task is supposed to do.
+- **Expected Output**: The expected output of the task. This is what the agent should return when the task is completed. You can use Few-Shot Learning (include a few examples of the expected output) here.
+- **Tools**: The tools that the agent can use to complete the task. You can also bind the tools to the agent instead of the task.
+
+# Step 3: Create the agents
+Now that we have our tasks, we can start creating the agents that will perform the tasks. An agent in CrewAI is a LangChain Runnable that can use tools to perform tasks. The agent can use the tools to perform the tasks that we defined in the **tasks.yaml** file.
+
+To initialize an **Agent** object, you can specify many parameters. But the most important ones are:
+
+- **Role**: This can be researcher, editor, html_generator, etc.
+- **Goal**: This is a brief description of what your agent’s overal goal is. Try to be precise and give your agent a good idea of what its importance is within the entire project.
+- **Backstory**: This is a brief description of the agent’s background. This is useful to give your agent a personality and a particular expertise. For example, you can say that the agent is a senior journalist known for its wit and humor. This will influence the writing style of the agent.
+
+# Step 4: Create the tools
+The tools are the functions that the agents will use to perform the tasks (that is why it is so important to use an LLM that supports function calling). We will then bind these tools to the agents when initializing them.
+
+In this example, we will be giving the research tools to the researcher and editor agents. The tools that we will be using will use the following methods from the Exa client:
+
+- **search_and_contents**: This tool will search a given query and return the full text contents each article.
+- **find_similar**: This tool will find similar articles to the ones that we pass in.
+-**get_contents**: This tool will get the contents of a given URL.
+
+# Step 5: Put everything together
+Once that everything is put together, you can put everything together in your **crew.py** file. This file will initialize the agents and tasks, bind the tools to the agents and create the crew.
+
+# Step 6: Run the crew
+Once everything is set up, you can run the crew using the CrewAI CLI. Remember that we are using poetry to manage the dependencies, so you should make sure that all your dependencies are installed in the virtual environment that you are using.
+
+## To run the crew, you can use the following command:
+
+    $ poetry lock
+    $ poetry install
+    $ poetry run <YOUR_CREW_NAME>
+    
+# Building GUI using Streamlit
+
+The project features an interactive GUI built with Streamlit for seamless newsletter generation. It allows users to input a topic and a personal message, which are processed by a team of AI agents to create a professional HTML newsletter. The GUI provides a simple and user-friendly interface with options to download the generated newsletter directly.
+
+## Features
+### 1.User Input Panel
+
 <img width="337" alt="Screenshot 2025-01-23 at 9 39 36 PM" src="https://github.com/user-attachments/assets/9e284f75-737c-4008-97c3-3d0b3ab5a4b1" />
 
-### 2. Real-Time Updates
+• The sidebar allows users to input a topic and add a personal message, which will appear prominently in the generated newsletter
+
+### 2.Real-Time Updates
+
 <img width="416" alt="Screenshot 2025-01-23 at 9 40 37 PM" src="https://github.com/user-attachments/assets/7a7e11c2-6eaa-404b-919a-cc377d0546b2" />
 
-### 3. Newsletter Generation
+• The interface dynamically displays the generation progress.
+
+• Users are notified upon successful generation.
+
+### 3.Newsletter Generation
+
 <img width="1037" alt="Screenshot 2025-01-23 at 9 42 05 PM" src="https://github.com/user-attachments/assets/a2466007-2181-4f39-aa7d-d5964b81296c" />
 
-### 4. Download Option
+• Using a team of specialized AI agents, the app transforms user inputs into a polished, professional newsletter, ensuring high-quality results every time.
+
+• The output is a downloadable HTML file ready for use.
+
+### 4.Download Option
+
 <img width="683" alt="Screenshot 2025-01-23 at 9 41 15 PM" src="https://github.com/user-attachments/assets/655878c9-5190-47ed-8c5c-f8c82e483553" />
+
+• The generated newsletter can be downloaded as an HTML file directly from the app.
