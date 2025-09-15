@@ -6,7 +6,10 @@ authors = ["Your Name <you@example.com>"]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"
-crewai = {extras = ["tools"], version = "^0.28.7"}
+# Use a modern CrewAI to avoid legacy transitive deps (e.g., tiktoken via embedchain)
+crewai = ">=0.186.1"
+# Explicitly include tools package (BaseTool is imported in our code)
+crewai-tools = ">=0.1.0"
 exa-py = "^1.0.9"
 langchain = "0.1.17"
 langchain-core = "0.1.52"

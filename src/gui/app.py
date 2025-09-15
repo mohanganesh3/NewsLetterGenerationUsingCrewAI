@@ -1,4 +1,17 @@
+import os
+import sys
 import streamlit as st
+
+# Ensure 'src' (the parent of this file's directory) is on sys.path so `newsletter_gen` is importable
+# when Streamlit runs this module directly (as configured on Streamlit Cloud)
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
+# If running on Streamlit Cloud, expose secrets as environment variables for downstream libs
+if st.secrets.get("GOOGLE_API_KEY"):
+    os.environ["GOOGLE_API_KEY"] = st.secrets["GOOGLE_API_KEY"]
+if st.secrets.get("EXA_API_KEY"):
+    os.environ["EXA_API_KEY"] = st.secrets["EXA_API_KEY"]
+
 from newsletter_gen.crew import NewsletterGenCrew
 
 
