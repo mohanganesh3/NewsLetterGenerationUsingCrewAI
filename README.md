@@ -1,4 +1,4 @@
-<h1 align="center">🚀 Live Demo: <a href="https://newslettergenerationusingcrewai-ocw9fz38zcsqr976xqg9h3.streamlit.app/">Open the Streamlit App</a></h1>
+### 🚀 Live Demo: <a href="https://newslettergenerationusingcrewai-ocw9fz38zcsqr976xqg9h3.streamlit.app/">Open the Streamlit App</a>
 
 # NewsletterGen: Your AI-Powered Newsletter Creation Suite 📰
 
