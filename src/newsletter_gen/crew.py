@@ -1,6 +1,8 @@
 from crewai import Agent, Crew, Process, Task
 from crewai.project import CrewBase, agent, crew, task
 from newsletter_gen.tools.research import SearchAndContents, FindSimilar, GetContents
+from langchain_anthropic import ChatAnthropic
+from langchain_groq import ChatGroq
 from datetime import datetime
 import streamlit as st
 from typing import Union, List, Tuple, Dict
