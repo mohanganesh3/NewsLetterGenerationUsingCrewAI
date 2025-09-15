@@ -1,14 +1,20 @@
-# Core dependencies for Newsletter Generation using CrewAI
+# Streamlit deployment requirements - simplified to avoid conflicts
 streamlit>=1.34.0
-crewai[tools]>=0.28.7
-exa-py>=1.0.9
-langchain==0.1.17
-langchain-core==0.1.52
-langchain-google-genai>=1.0.3
-pillow>=10.3.0
-tenacity>=8.2.3
 
-# Additional dependencies that might be needed
-pydantic>=2.0.0
+# Core AI and LangChain dependencies
+langchain-google-genai>=1.0.3
+langchain>=0.1.0
+langchain-core>=0.1.0
+
+# CrewAI with specific compatible version
+crewai==0.28.8
+
+# Research and utility dependencies
+exa-py>=1.0.9
+tenacity>=8.2.3
+pillow>=10.3.0
+
+# Basic utilities
 requests>=2.28.0
+pydantic>=2.0.0
 python-dotenv>=0.19.0
