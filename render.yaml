@@ -5,3 +5,6 @@ services:
     buildCommand: "poetry install"
     startCommand: "./start.sh"
     autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.0"
