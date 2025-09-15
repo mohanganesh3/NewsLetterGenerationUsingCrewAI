@@ -100,25 +100,3 @@ class GetContents(BaseTool):
 
 def get_tools():
     return [SearchAndContents(), FindSimilar(), GetContents()]
-
-
-# Simple programmatic helper to fetch recent news without CrewAI tools
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-def fetch_recent_news(search_query: str) -> list:
-    """
-    Programmatic helper for the app to fetch recent web results via Exa.
-    Returns a Python list of results which the app can JSON-serialize and
-    pass into Crew inputs (avoids CrewAI tool validation entirely).
-    """
-    exa = Exa(api_key=os.getenv("EXA_API_KEY"))
-    one_week_ago = datetime.now() - timedelta(days=7)
-    date_cutoff = one_week_ago.strftime("%Y-%m-%d")
-    results = exa.search_and_contents(
-        query=search_query,
-        use_autoprompt=True,
-        start_published_date=date_cutoff,
-        text={"include_html_tags": False, "max_characters": 300},
-        num_results=2,
-    )
-    time.sleep(1)
-    return results
