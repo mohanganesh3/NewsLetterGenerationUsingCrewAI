@@ -1,8 +1,11 @@
 research_task:
   description: >
-    Research the latest news on {topic} from reliable sources. Include only 1-2 relevant articles, summarize concisely (<500 characters), and provide URLs. Use concise search queries like "latest news on {topic}". Respect API rate limits with 1-2 second delays between calls. Handle errors with up to 3 retries.
+    Research the latest news on {topic} from reliable sources. Include only 1-2 relevant articles, summarize concisely (<500 characters), and provide URLs.
 
-    IMPORTANT INSTRUCTIONS ABOUT USING TOOLS: When using tools, DO NOT ESCAPE the underscore character "_", EVER. If you need to use a tool and pass in a parameter called 'search_query', you should write 'search_query', not 'search\_query'. THIS IS VERY IMPORTANT, else the tool will not work.
+    You are provided with pre_fetched_news (JSON) that already contains recent results for the topic. Use these as your primary sources:
+    {pre_fetched_news}
+
+    If pre_fetched_news is empty, rely on your general knowledge. Do not attempt to call external tools.
   
   expected_output: >
     A markdown document with 1-2 news stories, each with:
@@ -27,7 +30,7 @@ edit_task:
     - Validate URLs to ensure they lead to correct news articles.
     - Remove off-topic articles.
 
-    IMPORTANT INSTRUCTIONS ABOUT USING TOOLS: When using tools, DO NOT ESCAPE the underscore character "_", EVER. If you need to use a tool and pass in a parameter called 'search_query', you should write 'search_query', not 'search\_query'. THIS IS VERY IMPORTANT, else the tool will not work.
+    Use only the items provided by the research task; do not call external tools.
     
     **NOTE**:
     - Do not fetch new articles; only edit the given ones.

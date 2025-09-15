@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 import streamlit as st
 
 # Ensure 'src' (the parent of this file's directory) is on sys.path so `newsletter_gen` is importable
@@ -23,6 +24,7 @@ except Exception:
     pass
 
 from newsletter_gen.crew import NewsletterGenCrew
+from newsletter_gen.tools.research import fetch_recent_news
 
 
 class NewsletterGenUI:
@@ -34,10 +36,17 @@ class NewsletterGenUI:
         return html_template
 
     def generate_newsletter(self, topic, personal_message):
+        # Fetch recent news programmatically (avoids CrewAI tool validation issues)
+        try:
+            recent = fetch_recent_news(topic)
+        except Exception as e:
+            recent = []  # Fallback to empty if Exa fails; the researcher will rely on general knowledge
         inputs = {
             "topic": topic,
             "personal_message": personal_message,
             "html_template": self.load_html_template(),
+            # Provide pre-fetched results to the crew; referenced in tasks.yaml
+            "pre_fetched_news": json.dumps(recent, default=str),
         }
         return NewsletterGenCrew().crew().kickoff(inputs=inputs)
 
