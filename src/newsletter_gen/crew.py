@@ -22,12 +22,18 @@ class NewsletterGenCrew:
 
     def llm(self):
         #llm = ChatAnthropic(model_name="claude-3-sonnet-20240229", max_tokens=4096)
-        groq_api_key=os.getenv('GROQ_API_KEY')
-        os.environ["GOOGLE_API_KEY"]=os.getenv("GOOGLE_API_KEY")
-        llm=ChatGroq(groq_api_key=groq_api_key,
-             model_name="Llama3-8b-8192")
+        #groq_api_key=os.getenv('GROQ_API_KEY')
+        #llm=ChatGroq(groq_api_key=groq_api_key,
+        #     model_name="Llama3-8b-8192")
         # llm = ChatGroq(model="mixtral-8x7b-32768")
-        # llm = ChatGoogleGenerativeAI(google_api_key=os.getenv("GOOGLE_API_KEY"))
+        
+        # Using Google Gemini API - Free tier with Gemini 2.0 Flash-Lite (most cost-effective)
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-2.0-flash-lite",
+            google_api_key=google_api_key,
+            temperature=0.7
+        )
 
         return llm
 
