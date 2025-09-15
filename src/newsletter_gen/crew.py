@@ -38,13 +38,20 @@ class NewsletterGenCrew:
     tasks_config = "config/tasks.yaml"
 
     def llm(self):
-        # Use Google Gemini instead of deprecated Groq model
-        os.environ["GOOGLE_API_KEY"] = os.getenv("GOOGLE_API_KEY")
+        # Use Google Gemini with explicit provider for Streamlit Cloud
+        google_api_key = os.getenv("GOOGLE_API_KEY")
+        if not google_api_key:
+            raise ValueError("GOOGLE_API_KEY environment variable is required")
+        
+        # Set environment variable explicitly for langchain
+        os.environ["GOOGLE_API_KEY"] = google_api_key
+        
         llm = ChatGoogleGenerativeAI(
             model="gemini-1.5-flash",
-            google_api_key=os.getenv("GOOGLE_API_KEY"),
+            google_api_key=google_api_key,
             temperature=0.1,
-            max_tokens=4096
+            max_tokens=4096,
+            convert_system_message_to_human=True  # For better compatibility
         )
         
         # Alternative models (commented out):

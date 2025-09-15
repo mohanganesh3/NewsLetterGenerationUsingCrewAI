@@ -1,11 +1,19 @@
-crewai[tools]>=0.28.7
-exa-py>=1.0.9
-langchain==0.1.17
-langchain-core==0.1.52
-langchain-anthropic>=0.1.11
-langchain-groq>=0.1.3
+# Simplified requirements for Streamlit Cloud deployment
+# Core framework with minimal dependencies
 streamlit>=1.34.0
 langchain-google-genai>=1.0.3
-pillow>=10.3.0
-tenacity>=8.2.3
+google-generativeai>=0.5.0
 python-dotenv>=1.0.0
+requests>=2.31.0
+pydantic>=2.0.0
+PyYAML>=6.0
+
+# CrewAI - using specific stable version  
+crewai==0.28.8
+
+# Research tools
+exa-py>=1.0.9
+
+# Essential utilities
+click>=8.0.0
+tenacity>=8.2.3
