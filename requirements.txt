@@ -6,10 +6,8 @@ langchain-google-genai>=1.0.3
 langchain>=0.1.0
 langchain-core>=0.1.0
 
-# CrewAI (modern version; avoids legacy transitive deps that require Rust on Py3.13)
-crewai>=0.186.1
-# Tools base class used by src/newsletter_gen/tools/research.py
-crewai-tools>=0.1.0
+# CrewAI with specific compatible version
+crewai==0.28.8
 
 # Research and utility dependencies
 exa-py>=1.0.9
