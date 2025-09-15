@@ -1,16 +1,34 @@
 from langchain_core.tools import BaseTool
+from pydantic import BaseModel, Field
 from exa_py import Exa
 import os
 from datetime import datetime, timedelta
 import time
+import json
 from tenacity import retry, stop_after_attempt, wait_exponential
 
 
-class SearchAndContents(BaseTool):
-    name: str = "Search and Contents Tool"
-    description: str = (
-        "Searches the web for recent news (last week) using Exa API and returns content summaries."
+# Explicit input schemas help both LangChain and CrewAI validate tool usage
+class SearchAndContentsInput(BaseModel):
+    search_query: str = Field(..., description="Query string to search recent web content")
+
+
+class FindSimilarInput(BaseModel):
+    article_url: str = Field(..., description="URL of the article to find similar content for")
+
+
+class GetContentsInput(BaseModel):
+    article_ids: list[str] = Field(
+        ..., description="List of article IDs or URLs to fetch contents for"
     )
+
+
+class SearchAndContents(BaseTool):
+    name: str = "search_and_contents"
+    description: str = (
+        "Search the web (last 7 days) using Exa and return brief content summaries as JSON."
+    )
+    args_schema = SearchAndContentsInput
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
     def _run(self, search_query: str) -> str:
@@ -24,10 +42,11 @@ class SearchAndContents(BaseTool):
                 use_autoprompt=True,
                 start_published_date=date_cutoff,
                 text={"include_html_tags": False, "max_characters": 300},
-                num_results=2
+                num_results=2,
             )
             time.sleep(1)  # Enforce 1-second delay
-            return search_results
+            # Ensure JSON-serializable output
+            return json.dumps(search_results, default=str)
         except Exception as e:
             if "413" in str(e) or "429" in str(e):
                 raise  # Let tenacity handle retry
@@ -35,10 +54,11 @@ class SearchAndContents(BaseTool):
 
 
 class FindSimilar(BaseTool):
-    name: str = "Find Similar Tool"
+    name: str = "find_similar"
     description: str = (
-        "Searches for similar articles to a given article using the Exa API. Takes in a URL of the article."
+        "Find similar articles to a given article URL using Exa; returns JSON."
     )
+    args_schema = FindSimilarInput
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
     def _run(self, article_url: str) -> str:
@@ -49,10 +69,10 @@ class FindSimilar(BaseTool):
         try:
             search_results = exa.find_similar(
                 url=article_url,
-                start_published_date=date_cutoff
+                start_published_date=date_cutoff,
             )
             time.sleep(1)  # Enforce 1-second delay
-            return search_results
+            return json.dumps(search_results, default=str)
         except Exception as e:
             if "413" in str(e) or "429" in str(e):
                 raise  # Let tenacity handle retry
@@ -60,19 +80,20 @@ class FindSimilar(BaseTool):
 
 
 class GetContents(BaseTool):
-    name: str = "Get Contents Tool"
+    name: str = "get_contents"
     description: str = (
-        "Gets the contents of specific articles using the Exa API. Takes article IDs as a list, e.g., ['https://www.cnbc.com/2024/04/18/my-news-story']."
+        "Get contents of specific articles via Exa. Input: list of IDs/URLs; returns JSON."
     )
+    args_schema = GetContentsInput
 
     @retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-    def _run(self, article_ids: str) -> str:
+    def _run(self, article_ids: list[str]) -> str:
         exa = Exa(api_key=os.getenv("EXA_API_KEY"))
 
         try:
             contents = exa.get_contents(article_ids, text={"max_characters": 300})
             time.sleep(1)  # Enforce 1-second delay
-            return contents
+            return json.dumps(contents, default=str)
         except Exception as e:
             if "413" in str(e) or "429" in str(e):
                 raise  # Let tenacity handle retry
