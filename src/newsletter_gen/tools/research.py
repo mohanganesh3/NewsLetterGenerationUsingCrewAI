@@ -1,4 +1,4 @@
-from langchain_core.tools import BaseTool, StructuredTool
+from langchain_core.tools import BaseTool
 from pydantic import BaseModel, Field
 from exa_py import Exa
 import os
@@ -98,79 +98,3 @@ class GetContents(BaseTool):
             if "413" in str(e) or "429" in str(e):
                 raise  # Let tenacity handle retry
             raise Exception(f"Exa API error: {str(e)}")
-
-
-# StructuredTool wrappers (BaseTool instances) to avoid subclass type mismatches
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-def _search_and_contents(search_query: str) -> str:
-    exa = Exa(api_key=os.getenv("EXA_API_KEY"))
-    one_week_ago = datetime.now() - timedelta(days=7)
-    date_cutoff = one_week_ago.strftime("%Y-%m-%d")
-    try:
-        search_results = exa.search_and_contents(
-            query=search_query,
-            use_autoprompt=True,
-            start_published_date=date_cutoff,
-            text={"include_html_tags": False, "max_characters": 300},
-            num_results=2,
-        )
-        time.sleep(1)
-        return json.dumps(search_results, default=str)
-    except Exception as e:
-        if "413" in str(e) or "429" in str(e):
-            raise
-        raise Exception(f"Exa API error: {str(e)}")
-
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-def _find_similar(article_url: str) -> str:
-    exa = Exa(api_key=os.getenv("EXA_API_KEY"))
-    one_week_ago = datetime.now() - timedelta(days=7)
-    date_cutoff = one_week_ago.strftime("%Y-%m-%d")
-    try:
-        search_results = exa.find_similar(
-            url=article_url,
-            start_published_date=date_cutoff,
-        )
-        time.sleep(1)
-        return json.dumps(search_results, default=str)
-    except Exception as e:
-        if "413" in str(e) or "429" in str(e):
-            raise
-        raise Exception(f"Exa API error: {str(e)}")
-
-
-@retry(stop=stop_after_attempt(3), wait=wait_exponential(multiplier=1, min=1, max=10))
-def _get_contents(article_ids: list[str]) -> str:
-    exa = Exa(api_key=os.getenv("EXA_API_KEY"))
-    try:
-        contents = exa.get_contents(article_ids, text={"max_characters": 300})
-        time.sleep(1)
-        return json.dumps(contents, default=str)
-    except Exception as e:
-        if "413" in str(e) or "429" in str(e):
-            raise
-        raise Exception(f"Exa API error: {str(e)}")
-
-
-SEARCH_AND_CONTENTS_TOOL = StructuredTool.from_function(
-    func=_search_and_contents,
-    name="search_and_contents",
-    description="Search the web (last 7 days) using Exa and return brief content summaries as JSON.",
-)
-
-FIND_SIMILAR_TOOL = StructuredTool.from_function(
-    func=_find_similar,
-    name="find_similar",
-    description="Find similar articles to a given article URL using Exa; returns JSON.",
-)
-
-GET_CONTENTS_TOOL = StructuredTool.from_function(
-    func=_get_contents,
-    name="get_contents",
-    description="Get contents of specific articles via Exa. Input: list of IDs/URLs; returns JSON.",
-)
-
-
-def get_tools() -> list[BaseTool]:
-    return [SEARCH_AND_CONTENTS_TOOL, FIND_SIMILAR_TOOL, GET_CONTENTS_TOOL]
