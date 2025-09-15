@@ -26,6 +26,14 @@ class NewsletterGenCrew:
         
         # Using Google Gemini API - Free tier with Gemini 2.0 Flash-Lite (most cost-effective)
         google_api_key = os.getenv("GOOGLE_API_KEY")
+        
+        # Validate API key is present
+        if not google_api_key:
+            raise ValueError(
+                "GOOGLE_API_KEY environment variable is required but not set. "
+                "Please provide a valid Google API key for Gemini AI."
+            )
+        
         llm = ChatGoogleGenerativeAI(
             model="gemini-2.0-flash-lite",
             google_api_key=google_api_key,

@@ -17,5 +17,11 @@ def run():
     }
     try:
         NewsletterGenCrew().crew().kickoff(inputs=inputs)
+    except ValueError as e:
+        if "GOOGLE_API_KEY" in str(e):
+            print(f"❌ Configuration Error: {e}")
+            print("Please set the GOOGLE_API_KEY environment variable with a valid Google API key.")
+        else:
+            print(f"❌ An error occurred: {e}")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"❌ An unexpected error occurred: {e}")
