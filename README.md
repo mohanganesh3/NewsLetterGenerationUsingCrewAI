@@ -1,4 +1,58 @@
-# NewsletterGen: Your AI-Powered Newsletter Creation Suite 📰
+# Newsl## 🚀 **Live Demo**
+**Try the live website here:** <a href="https://newslettergenerationusingcrewai-03l7.onrender.com">🌐 Visit NewsletterGen Live Demo</a>
+
+✨ **Features:**
+- 🤖 **AI-Powered Research**: Uses Google Gemini & Exa API for intelligent news gathering
+- 📰 **Multi-Agent System**: Research → Edit → Design workflow 
+- 🎨 **Professional Output**: HTML newsletters ready for distribution
+- 🌐 **Web Interface**: Easy-to-use Streamlit GUI
+- ⚡ **Real-time Generation**: Get newsletters in minutes, not hours
+
+## 🛠️ **Technology Stack**
+- **AI Models**: Google Gemini 1.5 Flash
+- **Web Research**: Exa API
+- **Multi-Agent Framework**: CrewAI
+- **Frontend**: Streamlit
+- **Backend**: Python 3.12
+- **Deployment**: Render
+- **Package Management**: Poetry
+
+## 🚀 **Quick Start**
+1. **Try Online**: Visit the [Live Demo](https://newslettergenerationusingcrewai-03l7.onrender.com)
+2. **Enter a Topic**: e.g., "AI technology", "stock market", "sports news"
+3. **Add Personal Message**: Optional greeting for your newsletter
+4. **Generate**: Click "Generate Newsletter" and wait for AI magic ✨
+5. **Download**: Get your professional HTML newsletter
+
+## 🏗️ **Local Development**
+```bash
+# Clone the repository
+git clone https://github.com/mohanganesh3/NewsLetterGenerationUsingCrewAI
+
+# Install dependencies
+poetry install
+
+# Set up environment variables
+cp .env.example .env
+# Add your API keys to .env
+
+# Run locally
+poetry run streamlit run src/gui/app.py
+```
+
+# What We Will Buildur AI-Powered Newsletter Creation Suite 📰
+
+Whether you're a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
+
+## 🚀 **Live Demo**
+**Try the live website here:** <a href="https://newslettergenerationusingcrewai-03l7.onrender.com">🌐 Visit NewsletterGen Live Demo</a>
+
+✨ **Features:**
+- 🤖 **AI-Powered Research**: Uses Google Gemini & Exa API for intelligent news gathering
+- 📰 **Multi-Agent System**: Research → Edit → Design workflow 
+- 🎨 **Professional Output**: HTML newsletters ready for distribution
+- 🌐 **Web Interface**: Easy-to-use Streamlit GUI
+- ⚡ **Real-time Generation**: Get newsletters in minutes, not hourssletterGen: Your AI-Powered Newsletter Creation Suite 📰
 
 Whether you’re a business owner or a content creator, NewsletterGen revolutionizes newsletter creation by combining advanced AI with a seamless user experience.
 
